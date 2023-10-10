@@ -22,8 +22,8 @@ public class IpGeolocationService : IIpGeolocationService
     {
         string requestUri = $"https://ipapi.co/{ip}/json";
         
-        var client = _clientFactory.CreateClient("ClientWithoutSSLValidation");
-        client.DefaultRequestHeaders.Add("User-Agent", "ipapi.co/#c-sharp-v1.03");
+        var client = _clientFactory.CreateClient("HttpClient");
+        client.DefaultRequestHeaders.Add("User-Agent", "ipapi.co/#c-sharp-v1.04");
 
         try
         {
