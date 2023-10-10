@@ -11,9 +11,9 @@ public class App
         _ipGeolocationService = ipGeolocationService;
     }
 
-    public async Task Run(string[] args)
+    public async Task Run(string ipAddress)
     {
-        var result = await _ipGeolocationService.GetIpGeolocationAsync("8.8.8.8");
+        var result = await _ipGeolocationService.GetIpGeolocationAsync(ipAddress);
 
         if (result is not null)
         {

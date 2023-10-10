@@ -1,4 +1,5 @@
-﻿using IpGeolocation.ConsoleApp;
+﻿using CommandLine;
+using IpGeolocation.ConsoleApp;
 using IpGeolocation.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,14 +9,17 @@ using Polly.Timeout;
 using Serilog;
 
 var services = new ServiceCollection();
+
 ConfigureServices(services);
+
+string ipAddress = CheckCommandLineOptions(args);
 
 // create service provider
 var serviceProvider = services.BuildServiceProvider();
 
 // entry to run app
 // ReSharper disable once PossibleNullReferenceException
-await serviceProvider.GetService<App>()!.Run(args);
+await serviceProvider.GetService<App>()!.Run(ipAddress);
 
 void ConfigureServices(IServiceCollection serviceCollection)
 {
@@ -76,3 +80,19 @@ static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 5)
 static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy(int seconds = 5)
     => Policy.TimeoutAsync<HttpResponseMessage>(seconds,
         TimeoutStrategy.Optimistic, onTimeoutAsync: (_, _, _, _) => Task.CompletedTask);
+
+static string CheckCommandLineOptions(string[] args)
+{
+    string ipAddr = null;
+    Parser.Default.ParseArguments<Options>(args)
+        .WithParsed(opt =>
+        {
+            ipAddr = opt.IpAddress;
+        })
+        .WithNotParsed(_ =>
+        {
+            // in case of parameter parsing errors or using help option close the application
+            Environment.Exit(0);
+        });
+    return ipAddr;
+}
