@@ -1,69 +1,34 @@
-using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using IpGeolocation.Models;
-using Polly.Timeout;
 
 namespace IpGeolocation.Services;
 
 public class IpGeolocationService : IIpGeolocationService
 {
-    private readonly IHttpClientFactory _clientFactory;
-    private readonly ILogger<IpGeolocationService> _logger;
+    private readonly IpApiService _ipApiService;
 
-    public IpGeolocationService(IHttpClientFactory clientFactory, ILogger<IpGeolocationService> logger)
+    public IpGeolocationService(IpApiService ipApiService)
     {
-        _clientFactory = clientFactory;
-        _logger = logger;
+        _ipApiService = ipApiService;
     }
     
-    public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ip)
-    {
-        string requestUri = $"https://ipapi.co/{ip}/json";
-        
-        var client = _clientFactory.CreateClient("HttpClient");
-        client.DefaultRequestHeaders.Add("User-Agent", "ipapi.co/#c-sharp-v1.04");
+    public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ipAddress)
+        => await _ipApiService.GetFullDataAsync(ipAddress);
+    
+    public async Task<string> GetCountryAsync(string ipAddress)
+        => await _ipApiService.GetCountryAsync(ipAddress);
+    
+    public async Task<string> GetCityAsync(string ipAddress)
+        => await _ipApiService.GetCityAsync(ipAddress);
 
-        try
-        {
-            using HttpResponseMessage response = await client.GetAsync(requestUri);
-            
-            if (response.IsSuccessStatusCode)
-            {
-                try
-                {
-                    IpGeolocationModel ipGeolocation = await response.Content.ReadFromJsonAsync<IpGeolocationModel>();
-                    return ipGeolocation;
-                }
-                catch (NotSupportedException ex) // When content type is not valid
-                {
-                    _logger.LogError(ex, "The content type is not supported.");
-                    throw;
-                }
-                catch (JsonException ex) // Invalid JSON
-                {
-                    _logger.LogError(ex, "Invalid JSON.");
-                    throw;
-                }
-            }
+    public async Task<string> GetTimezoneAsync(string ipAddress)
+        => await _ipApiService.GetTimezoneAsync(ipAddress);
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                _logger.LogError($"TooManyRequests: {response.ReasonPhrase}");
-            }
-        }
-        catch (TimeoutRejectedException ex)
-        {
-            _logger.LogError(ex, "Timeout has occurred.");
-            throw;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred.");
-            throw;
-        }
+    public async Task<string> GetLanguagesAsync(string ipAddress)
+        => await _ipApiService.GetLanguagesAsync(ipAddress);
 
-        return await Task.FromResult<IpGeolocationModel>(null);
-    }
+    public async Task<string> GetCurrencyAsync(string ipAddress)
+        => await _ipApiService.GetCurrencyAsync(ipAddress);
+
+    public async Task<string> GetCurrencyNameAsync(string ipAddress)
+        => await _ipApiService.GetCurrencyNameAsync(ipAddress);
 }
