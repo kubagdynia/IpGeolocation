@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
+        services.AddMemoryCache();
     }
     
     static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 5)

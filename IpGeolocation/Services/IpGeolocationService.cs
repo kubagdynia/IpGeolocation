@@ -1,18 +1,35 @@
 using IpGeolocation.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace IpGeolocation.Services;
 
 public class IpGeolocationService : IIpGeolocationService
 {
     private readonly IpApiService _ipApiService;
+    private readonly IMemoryCache _memoryCache;
 
-    public IpGeolocationService(IpApiService ipApiService)
+    public IpGeolocationService(IpApiService ipApiService, IMemoryCache memoryCache)
     {
         _ipApiService = ipApiService;
+        _memoryCache = memoryCache;
     }
-    
+
     public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ipAddress)
-        => await _ipApiService.GetFullDataAsync(ipAddress);
+    {
+        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        {
+            return await Task.FromResult(cachedIpGeolocationModel);
+        }
+
+        IpGeolocationModel ipGeolocationModel = await _ipApiService.GetFullDataAsync(ipAddress);
+
+        _memoryCache.Set(ipAddress, ipGeolocationModel, new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+        
+        return ipGeolocationModel; 
+    }
     
     public async Task<string> GetCountryAsync(string ipAddress)
         => await _ipApiService.GetCountryAsync(ipAddress);
