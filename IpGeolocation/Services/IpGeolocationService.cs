@@ -28,12 +28,30 @@ public class IpGeolocationService : IIpGeolocationService
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
         });
         
-        return ipGeolocationModel; 
+        return await Task.FromResult(ipGeolocationModel); 
     }
-    
+
     public async Task<string> GetCountryAsync(string ipAddress)
-        => await _ipApiService.GetCountryAsync(ipAddress);
-    
+    {
+        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        {
+            return await Task.FromResult(cachedIpGeolocationModel.Country);
+        }
+
+        string cacheKey = $"country-{ipAddress}";
+        
+        if (_memoryCache.TryGetValue(cacheKey, out string cachedCountry))
+        {
+            return await Task.FromResult(cachedCountry);
+        }
+        
+        string country = await _ipApiService.GetCountryAsync(ipAddress);
+        
+        SetCache(cacheKey, country);
+
+        return await Task.FromResult(country);
+    }
+
     public async Task<string> GetCityAsync(string ipAddress)
         => await _ipApiService.GetCityAsync(ipAddress);
 
@@ -48,4 +66,12 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetCurrencyNameAsync(string ipAddress)
         => await _ipApiService.GetCurrencyNameAsync(ipAddress);
+    
+    private void SetCache(string cacheKey, string value)
+    {
+        _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+    }
 }
