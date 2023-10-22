@@ -1,4 +1,5 @@
 using FluentAssertions;
+using IpGeolocation.Configuration;
 using IpGeolocation.Extensions;
 using IpGeolocation.Models;
 using IpGeolocation.Services;
@@ -15,11 +16,15 @@ public class IntegrationTests
     public void GlobalSetup()
     {
         _services = new ServiceCollection();
-        _services.RegisterIpGeolocation();
+        _services.RegisterIpGeolocation(new IpGeolocationSettings
+        {
+            CacheEnabled = true,
+            CacheExpirationTimeInMinutes = 5
+        });
         _serviceProvider = _services.BuildServiceProvider();
     }
 
-    [Test]
+    [Test, Order(1)]
     public async Task Service_Should_Return_Correct_FullData_For_Specific_Ip()
     {
         IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();

@@ -4,6 +4,7 @@ using IpGeolocation.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Options = IpGeolocation.ConsoleApp.Options;
 
 var services = new ServiceCollection();
 
@@ -40,7 +41,7 @@ void ConfigureServices(IServiceCollection serviceCollection)
     });
     
     // add and register services:
-    services.RegisterIpGeolocation();
+    services.RegisterIpGeolocation(configuration);
     
     // add app
     services.AddTransient<App>();

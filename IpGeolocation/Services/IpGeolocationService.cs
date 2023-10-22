@@ -1,5 +1,7 @@
+using IpGeolocation.Configuration;
 using IpGeolocation.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace IpGeolocation.Services;
 
@@ -7,15 +9,23 @@ public class IpGeolocationService : IIpGeolocationService
 {
     private readonly IpApiService _ipApiService;
     private readonly IMemoryCache _memoryCache;
+    private readonly IpGeolocationSettings _ipGeolocationSettings;
 
-    public IpGeolocationService(IpApiService ipApiService, IMemoryCache memoryCache)
+    public IpGeolocationService(IpApiService ipApiService, IMemoryCache memoryCache,
+        IOptions<IpGeolocationSettings> ipGeolocationSettings)
     {
         _ipApiService = ipApiService;
         _memoryCache = memoryCache;
+        _ipGeolocationSettings = ipGeolocationSettings?.Value;
     }
 
     public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetFullDataAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel);
@@ -30,6 +40,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetCountryAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetCountryAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Country);
@@ -51,6 +66,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetCityAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetCityAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.City);
@@ -72,6 +92,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetTimezoneAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetTimezoneAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Timezone);
@@ -93,6 +118,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetLanguagesAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetLanguagesAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Languages);
@@ -114,6 +144,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetCurrencyAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetCurrencyAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Currency);
@@ -135,6 +170,11 @@ public class IpGeolocationService : IIpGeolocationService
 
     public async Task<string> GetCurrencyNameAsync(string ipAddress)
     {
+        if (!CacheEnabled())
+        {
+            return await _ipApiService.GetCurrencyNameAsync(ipAddress);
+        }
+        
         if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.CurrencyName);
@@ -158,7 +198,10 @@ public class IpGeolocationService : IIpGeolocationService
     {
         _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_ipGeolocationSettings.CacheExpirationTimeInMinutes)
         });
     }
+
+    private bool CacheEnabled()
+        => _ipGeolocationSettings.CacheEnabled;
 }
