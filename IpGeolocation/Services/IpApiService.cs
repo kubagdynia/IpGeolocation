@@ -65,10 +65,25 @@ public class IpApiService
     {
         return await GetSpecificFieldAsync(ipAddress, "city");
     }
+    
+    public async Task<string> GetContinentCodeAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "continent_code");
+    }
 
     public async Task<string> GetCountryAsync(string ipAddress)
     {
         return await GetSpecificFieldAsync(ipAddress, "country");
+    }
+    
+    public async Task<string> GetCountryCodeAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "country_code");
+    }
+    
+    public async Task<string> GetCountryCodeIso3Async(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "country_code_iso3");
     }
     
     public async Task<string> GetTimezoneAsync(string ipAddress)
@@ -89,6 +104,26 @@ public class IpApiService
     public async Task<string> GetCurrencyNameAsync(string ipAddress)
     {
         return await GetSpecificFieldAsync(ipAddress, "currency_name");
+    }
+    
+    public async Task<string> GetRegionAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "region");
+    }
+    
+    public async Task<string> GetRegionCodeAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "region_code");
+    }
+    
+    public async Task<string> GetUtcOffsetAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "utc_offset");
+    }
+    
+    public async Task<string> GetOrgAsync(string ipAddress)
+    {
+        return await GetSpecificFieldAsync(ipAddress, "org");
     }
 
     private async Task<string> GetSpecificFieldAsync(string ipAddress, string fieldType)
