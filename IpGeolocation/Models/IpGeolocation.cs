@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
+using IpGeolocation.Cache;
 
 namespace IpGeolocation.Models;
 
-public class IpGeolocationModel
+public class IpGeolocationModel : ICacheable
 {
     /// <summary>
     /// Public (external) IP address (same as URL ip), e.g. "8.8.8.8"
@@ -153,4 +154,11 @@ public class IpGeolocationModel
     /// </summary>
     [JsonPropertyName("org")]
     public string Org { get; set; }
+
+    [JsonIgnore]
+    public string CacheKey
+        => GetCacheKey(Ip);
+    
+    public static string GetCacheKey(string ip)
+        => $"ip-geolocation@{ip}";
 }

@@ -1,3 +1,4 @@
+using IpGeolocation.Cache;
 using IpGeolocation.Configuration;
 using IpGeolocation.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
-        services.AddMemoryCache();
+        services.AddSingleton<ICacheService, MemoryCacheService>();
 
         if (configuration is not null)
         {

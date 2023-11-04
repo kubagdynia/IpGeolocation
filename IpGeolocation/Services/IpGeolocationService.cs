@@ -1,6 +1,6 @@
+using IpGeolocation.Cache;
 using IpGeolocation.Configuration;
 using IpGeolocation.Models;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace IpGeolocation.Services;
@@ -8,14 +8,16 @@ namespace IpGeolocation.Services;
 public class IpGeolocationService : IIpGeolocationService
 {
     private readonly IpApiService _ipApiService;
-    private readonly IMemoryCache _memoryCache;
+    private readonly ICacheService _cacheService;
     private readonly IpGeolocationSettings _ipGeolocationSettings;
 
-    public IpGeolocationService(IpApiService ipApiService, IMemoryCache memoryCache,
+    public IpGeolocationService(
+        IpApiService ipApiService,
+        ICacheService cacheService,
         IOptions<IpGeolocationSettings> ipGeolocationSettings)
     {
         _ipApiService = ipApiService;
-        _memoryCache = memoryCache;
+        _cacheService = cacheService;
         _ipGeolocationSettings = ipGeolocationSettings?.Value;
     }
 
@@ -25,15 +27,16 @@ public class IpGeolocationService : IIpGeolocationService
         {
             return await _ipApiService.GetFullDataAsync(ipAddress);
         }
-        
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel);
         }
 
         IpGeolocationModel ipGeolocationModel = await _ipApiService.GetFullDataAsync(ipAddress);
         
-        SetCache(ipAddress, ipGeolocationModel);
+        await _cacheService.SetAsync(ipGeolocationModel, _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
         
         return await Task.FromResult(ipGeolocationModel); 
     }
@@ -45,21 +48,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCountryAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Country);
         }
 
-        string cacheKey = $"Country-{ipAddress}";
+        string cacheKey = $"country@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCountry))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCountry);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string country = await _ipApiService.GetCountryAsync(ipAddress);
-        
-        SetCache(cacheKey, country);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, country),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(country);
     }
@@ -71,21 +77,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCountryCodeAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.CountryCode);
         }
 
-        string cacheKey = $"CountryCode-{ipAddress}";
+        string cacheKey = $"country-code@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCountryCode))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCountryCode);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string countryCode = await _ipApiService.GetCountryCodeAsync(ipAddress);
-        
-        SetCache(cacheKey, countryCode);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCode),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(countryCode);
     }
@@ -97,21 +106,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCountryCodeIso3Async(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.CountryCodeIso3);
         }
 
-        string cacheKey = $"CountryCodeIso3-{ipAddress}";
+        string cacheKey = $"country-code-iso3@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCountryCodeIso3))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCountryCodeIso3);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string countryCodeIso3 = await _ipApiService.GetCountryCodeIso3Async(ipAddress);
-        
-        SetCache(cacheKey, countryCodeIso3);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCodeIso3),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(countryCodeIso3);
     }
@@ -123,21 +135,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCityAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.City);
         }
 
-        string cacheKey = $"City-{ipAddress}";
+        string cacheKey = $"city@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCity))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCity);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string city = await _ipApiService.GetCityAsync(ipAddress);
-        
-        SetCache(cacheKey, city);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, city),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(city);
     }
@@ -149,21 +164,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetContinentCodeAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.ContinentCode);
         }
 
-        string cacheKey = $"ContinentCode-{ipAddress}";
+        string cacheKey = $"continent-code@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedContinentCode))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedContinentCode);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string continentCode = await _ipApiService.GetContinentCodeAsync(ipAddress);
-        
-        SetCache(cacheKey, continentCode);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, continentCode),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(continentCode);
     }
@@ -175,21 +193,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetTimezoneAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Timezone);
         }
 
-        string cacheKey = $"Timezone-{ipAddress}";
+        string cacheKey = $"timezone@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedTimezone))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedTimezone);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string timezone = await _ipApiService.GetTimezoneAsync(ipAddress);
-        
-        SetCache(cacheKey, timezone);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, timezone),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(timezone);
     }
@@ -201,21 +222,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetLanguagesAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Languages);
         }
 
-        string cacheKey = $"Languages-{ipAddress}";
+        string cacheKey = $"languages@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedLanguages))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedLanguages);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string languages = await _ipApiService.GetLanguagesAsync(ipAddress);
-        
-        SetCache(cacheKey, languages);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, languages),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(languages);
     }
@@ -227,21 +251,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCurrencyAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Currency);
         }
 
-        string cacheKey = $"Currency-{ipAddress}";
+        string cacheKey = $"currency@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCurrency))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCurrency);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string currency = await _ipApiService.GetCurrencyAsync(ipAddress);
-        
-        SetCache(cacheKey, currency);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currency),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(currency);
     }
@@ -253,21 +280,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetCurrencyNameAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.CurrencyName);
         }
 
-        string cacheKey = $"CurrencyName-{ipAddress}";
+        string cacheKey = $"currency-name@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedCurrencyName))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedCurrencyName);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string currencyName = await _ipApiService.GetCurrencyNameAsync(ipAddress);
-        
-        SetCache(cacheKey, currencyName);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currencyName),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(currencyName);
     }
@@ -279,21 +309,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetRegionAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Region);
         }
 
-        string cacheKey = $"Region-{ipAddress}";
+        string cacheKey = $"region@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedRegion))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedRegion);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string region = await _ipApiService.GetRegionAsync(ipAddress);
-        
-        SetCache(cacheKey, region);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, region),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(region);
     }
@@ -305,21 +338,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetRegionCodeAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.RegionCode);
         }
 
-        string cacheKey = $"RegionCode-{ipAddress}";
+        string cacheKey = $"region-code@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedRegionCode))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedRegionCode);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string regionCode = await _ipApiService.GetRegionCodeAsync(ipAddress);
-        
-        SetCache(cacheKey, regionCode);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, regionCode),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(regionCode);
     }
@@ -331,21 +367,24 @@ public class IpGeolocationService : IIpGeolocationService
             return await _ipApiService.GetUtcOffsetAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.UtcOffset);
         }
 
-        string cacheKey = $"UtcOffset-{ipAddress}";
+        string cacheKey = $"utc-offset@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedUtcOffset))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedUtcOffset);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string utcOffset = await _ipApiService.GetUtcOffsetAsync(ipAddress);
-        
-        SetCache(cacheKey, utcOffset);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, utcOffset),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(utcOffset);
     }
@@ -354,34 +393,29 @@ public class IpGeolocationService : IIpGeolocationService
     {
         if (!CacheEnabled())
         {
-            return await _ipApiService.GetUtcOffsetAsync(ipAddress);
+            return await _ipApiService.GetOrgAsync(ipAddress);
         }
         
-        if (_memoryCache.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(IpGeolocationModel.GetCacheKey(ipAddress),
+                out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel.Org);
         }
 
-        string cacheKey = $"Org-{ipAddress}";
+        string cacheKey = $"org@{ipAddress}";
         
-        if (_memoryCache.TryGetValue(cacheKey, out string cachedOrg))
+        if (_cacheService.TryGetValue(SpecificField.GetCacheKey(cacheKey),
+                out SpecificField cachedSpecificField))
         {
-            return await Task.FromResult(cachedOrg);
+            return await Task.FromResult(cachedSpecificField.Value);
         }
         
         string org = await _ipApiService.GetOrgAsync(ipAddress);
-        
-        SetCache(cacheKey, org);
+
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, org),
+            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
 
         return await Task.FromResult(org);
-    }
-
-    private void SetCache(string cacheKey, object value)
-    {
-        _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_ipGeolocationSettings.CacheExpirationTimeInMinutes)
-        });
     }
 
     private bool CacheEnabled()
