@@ -5,11 +5,11 @@ namespace IpGeolocation.Cache;
 
 public class MemoryCacheService : ICacheService
 {
-    private readonly ConcurrentDictionary<string, CachedItem> _storage = new();
+    internal readonly ConcurrentDictionary<string, CachedItem> Storage = new();
     
     public bool HasItem(string key)
     {
-        if (_storage.TryGetValue(key, out var cachedItem))
+        if (Storage.TryGetValue(key, out var cachedItem))
         {
             return !cachedItem.Expired();
         }
@@ -19,7 +19,7 @@ public class MemoryCacheService : ICacheService
 
     public bool TryGetValue<T>(string key, out T value) where T : ICacheable
     {
-        if (!_storage.TryGetValue(key, out var cachedItem))
+        if (!Storage.TryGetValue(key, out var cachedItem))
         {
             value = default;
             return false;
@@ -56,11 +56,11 @@ public class MemoryCacheService : ICacheService
     {
         var length = expirySeconds == 0 ? TimeSpan.FromSeconds(3600) : TimeSpan.FromSeconds(expirySeconds);
         
-        if (_storage.TryGetValue(item.CacheKey, out var cached))
+        if (Storage.TryGetValue(item.CacheKey, out var cached))
         {
             cached.Contents = JsonSerializer.SerializeToElement(item, CachedItem.JsonOptions);
             cached.Cached = DateTime.UtcNow;
-            cached.Expires = cached.Cached + length;
+            cached.Expires = cached.Cached.Add(length);
             cached.Invalidate();
             return;
         }
@@ -79,7 +79,7 @@ public class MemoryCacheService : ICacheService
         {
             cached.Contents = JsonSerializer.SerializeToElement(item, CachedItem.JsonOptions);
             cached.Cached = DateTime.UtcNow;
-            cached.Expires = cached.Cached + length;
+            cached.Expires = cached.Cached.Add(length);
             cached.Invalidate();
             return Task.CompletedTask;
         }
@@ -91,20 +91,20 @@ public class MemoryCacheService : ICacheService
     
     private void Set(CachedItem cachedItem)
     {
-        _storage.AddOrUpdate(cachedItem.Key, _ => cachedItem, (_, _) => cachedItem);
+        Storage.AddOrUpdate(cachedItem.Key, _ => cachedItem, (_, _) => cachedItem);
     }
 
-    private Task SetAsync(CachedItem cachedItem)
+    internal Task SetAsync(CachedItem cachedItem)
     {
-        _storage.AddOrUpdate(cachedItem.Key, _ => cachedItem, (_, _) => cachedItem);
+        Storage.AddOrUpdate(cachedItem.Key, _ => cachedItem, (_, _) => cachedItem);
         return Task.CompletedTask;
     }
 
     public bool Delete(string key)
-        => key is not null && _storage.TryRemove(key, out _);
+        => key is not null && Storage.TryRemove(key, out _);
     
     public Task<bool> DeleteAsync(string key)
-        => key is null ? Task.FromResult(false) : Task.FromResult(_storage.TryRemove(key, out _));
+        => key is null ? Task.FromResult(false) : Task.FromResult(Storage.TryRemove(key, out _));
     
     private bool Delete(CachedItem item)
         => Delete(item.Key);
@@ -116,7 +116,7 @@ public class MemoryCacheService : ICacheService
     {
         var toDeleted = new List<string>();
         
-        foreach (var pair in _storage)
+        foreach (var pair in Storage)
         {
             if (pair.Key.StartsWith(prefix))
             {
@@ -134,7 +134,7 @@ public class MemoryCacheService : ICacheService
     {
         var toDeleted = new List<string>();
         
-        foreach (var pair in _storage)
+        foreach (var pair in Storage)
         {
             if (pair.Key.StartsWith(prefix))
             {
@@ -160,5 +160,5 @@ public class MemoryCacheService : ICacheService
         => Get(item.CacheKey);
 
     private CachedItem Get(string key)
-        => _storage.TryGetValue(key, out var cachedItem) ? cachedItem : null;
+        => Storage.TryGetValue(key, out var cachedItem) ? cachedItem : null;
 }

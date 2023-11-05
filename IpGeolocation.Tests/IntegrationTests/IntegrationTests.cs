@@ -1,4 +1,5 @@
 using FluentAssertions;
+using IpGeolocation.Cache;
 using IpGeolocation.Configuration;
 using IpGeolocation.Extensions;
 using IpGeolocation.Models;
@@ -29,6 +30,9 @@ public class IntegrationTests
     {
         IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
+        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        await cacheService.InitializeAsync();
+        
         IpGeolocationModel ipResultData = await ipGeolocationService.GetIpGeolocationAsync("8.8.8.8");
         ipResultData.Should().NotBeNull();
 
@@ -43,18 +47,25 @@ public class IntegrationTests
         ipResultData.CurrencyName.Should().Be("Dollar");
         ipResultData.Region.Should().Be("California");
         ipResultData.RegionCode.Should().Be("CA");
-        ipResultData.UtcOffset.Should().Be("-0700");
+        //ipResultData.UtcOffset.Should().Be("-0700"); // commented out because it changes in time as part of the time change
         ipResultData.Org.Should().Be("GOOGLE");
+        
+        await cacheService.FlushAsync();
     }
     
     [Test]
     public async Task Service_Should_Return_Correct_Country_For_Specific_Ip()
     {
         IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        
+        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        await cacheService.InitializeAsync();
 
         string result = await ipGeolocationService.GetCountryAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("US");
+        
+        await cacheService.FlushAsync();
     }
     
     [Test]

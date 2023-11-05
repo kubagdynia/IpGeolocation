@@ -25,7 +25,8 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
-        services.AddSingleton<ICacheService, MemoryCacheService>();
+        //services.AddSingleton<ICacheService, MemoryCacheService>();
+        services.AddSingleton<ICacheService, MemoryCacheFileStorageService>();
 
         if (configuration is not null)
         {
