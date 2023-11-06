@@ -41,7 +41,9 @@ public static class ServiceCollectionExtensions
                 {
                     opt.BaseAddress = settings.BaseAddress;
                     opt.CacheEnabled = settings.CacheEnabled;
-                    opt.CacheExpirationTimeInMinutes = settings.CacheExpirationTimeInMinutes;
+                    opt.CacheExpiration = settings.CacheExpiration;
+                    opt.CacheExpirationType = settings.CacheExpirationType;
+                    opt.CacheType = settings.CacheType;
                 });
             }
             else
@@ -57,7 +59,9 @@ public static class ServiceCollectionExtensions
                 {
                     opt.BaseAddress = settings.BaseAddress;
                     opt.CacheEnabled = settings.CacheEnabled;
-                    opt.CacheExpirationTimeInMinutes = settings.CacheExpirationTimeInMinutes;
+                    opt.CacheExpiration = settings.CacheExpiration;
+                    opt.CacheExpirationType = settings.CacheExpirationType;
+                    opt.CacheType = settings.CacheType;
                 });
             }
             else

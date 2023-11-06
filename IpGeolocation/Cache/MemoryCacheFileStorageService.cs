@@ -1,11 +1,14 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using IpGeolocation.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace IpGeolocation.Cache;
 
 public class MemoryCacheFileStorageService : MemoryCacheService
 {
-    public MemoryCacheFileStorageService()
+    public MemoryCacheFileStorageService(IOptions<IpGeolocationSettings> ipGeolocationSettings)
+        : base(ipGeolocationSettings)
     {
         CreateCacheDirectory();
     }

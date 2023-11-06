@@ -36,7 +36,7 @@ public class IpGeolocationService : IIpGeolocationService
 
         IpGeolocationModel ipGeolocationModel = await _ipApiService.GetFullDataAsync(ipAddress);
         
-        await _cacheService.SetAsync(ipGeolocationModel, _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(ipGeolocationModel);
         
         return await Task.FromResult(ipGeolocationModel); 
     }
@@ -64,8 +64,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string country = await _ipApiService.GetCountryAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, country),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, country));
 
         return await Task.FromResult(country);
     }
@@ -93,8 +92,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string countryCode = await _ipApiService.GetCountryCodeAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCode),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCode));
 
         return await Task.FromResult(countryCode);
     }
@@ -122,8 +120,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string countryCodeIso3 = await _ipApiService.GetCountryCodeIso3Async(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCodeIso3),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, countryCodeIso3));
 
         return await Task.FromResult(countryCodeIso3);
     }
@@ -151,8 +148,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string city = await _ipApiService.GetCityAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, city),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, city));
 
         return await Task.FromResult(city);
     }
@@ -180,8 +176,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string continentCode = await _ipApiService.GetContinentCodeAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, continentCode),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, continentCode));
 
         return await Task.FromResult(continentCode);
     }
@@ -209,8 +204,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string timezone = await _ipApiService.GetTimezoneAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, timezone),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, timezone));
 
         return await Task.FromResult(timezone);
     }
@@ -238,8 +232,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string languages = await _ipApiService.GetLanguagesAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, languages),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, languages));
 
         return await Task.FromResult(languages);
     }
@@ -267,8 +260,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string currency = await _ipApiService.GetCurrencyAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currency),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currency));
 
         return await Task.FromResult(currency);
     }
@@ -296,8 +288,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string currencyName = await _ipApiService.GetCurrencyNameAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currencyName),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, currencyName));
 
         return await Task.FromResult(currencyName);
     }
@@ -325,8 +316,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string region = await _ipApiService.GetRegionAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, region),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, region));
 
         return await Task.FromResult(region);
     }
@@ -354,8 +344,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string regionCode = await _ipApiService.GetRegionCodeAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, regionCode),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, regionCode));
 
         return await Task.FromResult(regionCode);
     }
@@ -383,8 +372,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string utcOffset = await _ipApiService.GetUtcOffsetAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, utcOffset),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, utcOffset));
 
         return await Task.FromResult(utcOffset);
     }
@@ -412,8 +400,7 @@ public class IpGeolocationService : IIpGeolocationService
         
         string org = await _ipApiService.GetOrgAsync(ipAddress);
 
-        await _cacheService.SetAsync(SpecificField.Create(cacheKey, org),
-            _ipGeolocationSettings.CacheExpirationTimeInMinutes * 60);
+        await _cacheService.SetAsync(SpecificField.Create(cacheKey, org));
 
         return await Task.FromResult(org);
     }

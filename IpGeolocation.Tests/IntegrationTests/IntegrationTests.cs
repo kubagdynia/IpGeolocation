@@ -20,7 +20,9 @@ public class IntegrationTests
         _services.RegisterIpGeolocation(new IpGeolocationSettings
         {
             CacheEnabled = true,
-            CacheExpirationTimeInMinutes = 5
+            CacheExpirationType = CacheExpirationType.Hours,
+            CacheExpiration = 2,
+            CacheType = CacheType.MemoryAndFile
         });
         _serviceProvider = _services.BuildServiceProvider();
     }
