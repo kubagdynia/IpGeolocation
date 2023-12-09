@@ -1,4 +1,4 @@
-using IpGeolocation.Cache;
+using CacheDrive.Extensions;
 using IpGeolocation.Configuration;
 using IpGeolocation.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +25,8 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
-        //services.AddSingleton<ICacheService, MemoryCacheService>();
-        services.AddSingleton<ICacheService, MemoryCacheFileStorageService>();
+        
+        services.RegisterCacheDrive(configuration, configurationSectionName: "CacheSettings");
 
         if (configuration is not null)
         {
@@ -40,10 +40,6 @@ public static class ServiceCollectionExtensions
                 services.Configure<IpGeolocationSettings>(opt =>
                 {
                     opt.BaseAddress = settings.BaseAddress;
-                    opt.CacheEnabled = settings.CacheEnabled;
-                    opt.CacheExpiration = settings.CacheExpiration;
-                    opt.CacheExpirationType = settings.CacheExpirationType;
-                    opt.CacheType = settings.CacheType;
                 });
             }
             else
@@ -58,10 +54,6 @@ public static class ServiceCollectionExtensions
                 services.Configure<IpGeolocationSettings>(opt =>
                 {
                     opt.BaseAddress = settings.BaseAddress;
-                    opt.CacheEnabled = settings.CacheEnabled;
-                    opt.CacheExpiration = settings.CacheExpiration;
-                    opt.CacheExpirationType = settings.CacheExpirationType;
-                    opt.CacheType = settings.CacheType;
                 });
             }
             else

@@ -1,5 +1,5 @@
+using CacheDrive.Services;
 using FluentAssertions;
-using IpGeolocation.Cache;
 using IpGeolocation.Configuration;
 using IpGeolocation.Extensions;
 using IpGeolocation.Models;
@@ -14,18 +14,20 @@ public class IntegrationTests
     private ServiceProvider _serviceProvider;
 
     [OneTimeSetUp]
-    public void GlobalSetup()
+    public void Init()
     {
         _services = new ServiceCollection();
-        _services.RegisterIpGeolocation(new IpGeolocationSettings
-        {
-            CacheEnabled = true,
-            CacheExpirationType = CacheExpirationType.Hours,
-            CacheExpiration = 2,
-            CacheType = CacheType.MemoryAndFile
-        });
+        _services.RegisterIpGeolocation(new IpGeolocationSettings());
         _serviceProvider = _services.BuildServiceProvider();
     }
+
+    [OneTimeTearDown]
+    public void Cleanup()
+    {
+        _serviceProvider.Dispose();
+    }
+    
+    
 
     [Test, Order(1)]
     public async Task Service_Should_Return_Correct_FullData_For_Specific_Ip()

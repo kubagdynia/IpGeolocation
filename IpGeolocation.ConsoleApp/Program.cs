@@ -19,6 +19,8 @@ var serviceProvider = services.BuildServiceProvider();
 // ReSharper disable once PossibleNullReferenceException
 await serviceProvider.GetService<App>()!.Run(ipAddress);
 
+serviceProvider.Dispose();
+
 void ConfigureServices(IServiceCollection serviceCollection)
 {
     // build config
