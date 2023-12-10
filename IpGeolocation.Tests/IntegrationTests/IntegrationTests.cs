@@ -1,9 +1,9 @@
 using CacheDrive.Services;
 using FluentAssertions;
-using IpGeolocation.Configuration;
 using IpGeolocation.Extensions;
 using IpGeolocation.Models;
 using IpGeolocation.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IpGeolocation.Tests.IntegrationTests;
@@ -17,7 +17,20 @@ public class IntegrationTests
     public void Init()
     {
         _services = new ServiceCollection();
-        _services.RegisterIpGeolocation(new IpGeolocationSettings());
+
+        var testConfiguration = new Dictionary<string, string>
+        {
+            {"IpGeolocationSettings:BaseAddress", "https://ipapi.co/"},
+            {"CacheSettings:CacheEnabled", "true"},
+            {"CacheSettings:CacheExpirationType", "Minutes"},
+            {"CacheSettings:CacheExpiration", "60"},
+            {"CacheSettings:CacheType", "MemoryAndFile"},
+            {"CacheSettings:InitializeOnStartup", "true"},
+            {"CacheSettings:FlushOnExit", "true"}
+        };
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(testConfiguration).Build();
+        _services.RegisterIpGeolocation(configuration);
+        
         _serviceProvider = _services.BuildServiceProvider();
     }
 
