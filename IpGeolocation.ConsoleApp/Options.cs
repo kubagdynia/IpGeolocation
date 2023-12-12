@@ -2,7 +2,7 @@ using CommandLine;
 
 namespace IpGeolocation.ConsoleApp;
 
-public class Options
+public abstract class Options
 {
     [Option('i', "ip", Required = true, HelpText = "IP Address")]
     public string IpAddress { get; set; }

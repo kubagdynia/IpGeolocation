@@ -61,72 +61,46 @@ public class IpApiService
         return await Task.FromResult<IpGeolocationModel>(null);
     }
 
-    public async Task<string> GetCityAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "city");
-    }
+    public Task<string> GetCityAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "city");
     
-    public async Task<string> GetContinentCodeAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "continent_code");
-    }
+    public Task<string> GetContinentCodeAsync(string ipAddress) 
+        => GetValueAsync(ipAddress, "continent_code");
 
-    public async Task<string> GetCountryAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "country");
-    }
+    public Task<string> GetCountryAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "country");
     
-    public async Task<string> GetCountryCodeAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "country_code");
-    }
+    public Task<string> GetCountryCodeAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "country_code");
     
-    public async Task<string> GetCountryCodeIso3Async(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "country_code_iso3");
-    }
+    public Task<string> GetCountryCodeIso3Async(string ipAddress)
+        => GetValueAsync(ipAddress, "country_code_iso3");
     
-    public async Task<string> GetTimezoneAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "timezone");
-    }
+    public Task<string> GetTimezoneAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "timezone");
     
-    public async Task<string> GetLanguagesAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "languages");
-    }
+    public Task<string> GetLanguagesAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "languages");
     
-    public async Task<string> GetCurrencyAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "currency");
-    }
+    public Task<string> GetCurrencyAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "currency");
     
-    public async Task<string> GetCurrencyNameAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "currency_name");
-    }
+    public Task<string> GetCurrencyNameAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "currency_name");
     
-    public async Task<string> GetRegionAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "region");
-    }
+    public Task<string> GetRegionAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "region");
     
-    public async Task<string> GetRegionCodeAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "region_code");
-    }
+    public Task<string> GetRegionCodeAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "region_code");
     
-    public async Task<string> GetUtcOffsetAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "utc_offset");
-    }
+    public Task<string> GetUtcOffsetAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "utc_offset");
     
-    public async Task<string> GetOrgAsync(string ipAddress)
-    {
-        return await GetSpecificFieldAsync(ipAddress, "org");
-    }
+    public Task<string> GetOrgAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "org");
 
-    private async Task<string> GetSpecificFieldAsync(string ipAddress, string fieldType)
+    private async Task<string> GetValueAsync(string ipAddress, string fieldType)
     {
         try
         {
