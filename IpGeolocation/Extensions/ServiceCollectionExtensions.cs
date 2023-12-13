@@ -11,12 +11,12 @@ namespace IpGeolocation.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
+    public static void UseIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
     {
-        RegisterIpGeolocation(services, null, null, settings);
+        UseIpGeolocation(services, null, null, settings);
     }
     
-    public static void RegisterIpGeolocation(this IServiceCollection services,
+    public static void UseIpGeolocation(this IServiceCollection services,
         IConfiguration configuration = null,
         string configurationSectionName = null,
         IpGeolocationSettings settings = null)

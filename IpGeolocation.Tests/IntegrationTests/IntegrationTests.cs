@@ -29,7 +29,7 @@ public class IntegrationTests
             {"CacheSettings:FlushOnExit", "true"}
         };
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(testConfiguration).Build();
-        _services.RegisterIpGeolocation(configuration);
+        _services.UseIpGeolocation(configuration);
         
         _serviceProvider = _services.BuildServiceProvider();
     }

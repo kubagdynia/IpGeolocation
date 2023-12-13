@@ -43,7 +43,7 @@ void ConfigureServices(IServiceCollection serviceCollection)
     });
     
     // add and register services:
-    services.RegisterIpGeolocation(configuration);
+    services.UseIpGeolocation(configuration);
     
     // add app
     services.AddTransient<App>();

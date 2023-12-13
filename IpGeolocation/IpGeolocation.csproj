@@ -1,9 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>IpGeolocation</Title>
+        <Authors>Jakub Kurłowicz</Authors>
+        <Copyright>2023</Copyright>
+        <PackageProjectUrl>https://github.com/kubagdynia/IpGeolocation</PackageProjectUrl>
+        <Version>0.1.0</Version>
+        <Description>IP Geolocation API based on ipapi.co</Description>
+        <RepositoryUrl>https://github.com/kubagdynia/IpGeolocation</RepositoryUrl>
+        <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
