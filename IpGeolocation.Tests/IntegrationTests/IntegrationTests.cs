@@ -86,6 +86,21 @@ public class IntegrationTests
     }
     
     [Test]
+    public async Task Service_Should_Return_Correct_Country_Name_For_Specific_Ip()
+    {
+        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        
+        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        await cacheService.InitializeAsync();
+
+        string result = await ipGeolocationService.GetCountryNameAsync("8.8.8.8");
+        result.Should().NotBeNull();
+        result.Should().Be("United States");
+        
+        await cacheService.FlushAsync();
+    }
+    
+    [Test]
     public async Task Service_Should_Return_Correct_City_For_Specific_Ip()
     {
         IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();

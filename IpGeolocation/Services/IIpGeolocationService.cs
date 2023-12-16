@@ -15,6 +15,11 @@ public interface IIpGeolocationService
     Task<string> GetCountryAsync(string ipAddress);
     
     /// <summary>
+    /// Country name
+    /// </summary>
+    Task<string> GetCountryNameAsync(string ipAddress);
+    
+    /// <summary>
     /// Country code (2 letter, ISO 3166-1 alpha-2)
     /// </summary>
     Task<string> GetCountryCodeAsync(string ipAddress);

@@ -49,6 +49,27 @@ public class IpGeolocationService : IIpGeolocationService
 
         return await Task.FromResult(country);
     }
+    
+    public async Task<string> GetCountryNameAsync(string ipAddress)
+    {
+        if (_cacheService.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
+        {
+            return await Task.FromResult(cachedIpGeolocationModel.CountryName);
+        }
+
+        string cacheKey = $"country-name@{ipAddress}";
+        
+        if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
+        {
+            return await Task.FromResult(cachedValue);
+        }
+        
+        string countryName = await _ipApiService.GetCountryNameAsync(ipAddress);
+
+        await _cacheService.SetAsync(cacheKey, countryName);
+
+        return await Task.FromResult(countryName);
+    }
 
     public async Task<string> GetCountryCodeAsync(string ipAddress)
     {

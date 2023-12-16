@@ -70,6 +70,9 @@ public class IpApiService
     public Task<string> GetCountryAsync(string ipAddress)
         => GetValueAsync(ipAddress, "country");
     
+    public Task<string> GetCountryNameAsync(string ipAddress)
+        => GetValueAsync(ipAddress, "country_name");
+    
     public Task<string> GetCountryCodeAsync(string ipAddress)
         => GetValueAsync(ipAddress, "country_code");
     

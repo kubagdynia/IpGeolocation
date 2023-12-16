@@ -55,6 +55,12 @@ public class App
                 string country = await _ipGeolocationService.GetCountryAsync(options.IpAddress);
                 Console.WriteLine($"Country: {country}");
             }
+            
+            if (options.CountryName)
+            {
+                string countryName = await _ipGeolocationService.GetCountryNameAsync(options.IpAddress);
+                Console.WriteLine($"Country Name: {countryName}");
+            }
         }
         
         
