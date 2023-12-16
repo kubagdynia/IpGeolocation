@@ -25,16 +25,16 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
-        
-        services.RegisterCacheDrive(configuration, configurationSectionName: "CacheSettings");
 
+        if (string.IsNullOrEmpty(configurationSectionName))
+        {
+            configurationSectionName = "IpGeolocationSettings";
+        }
+
+        services.RegisterCacheDrive(configuration, configurationSectionName: configurationSectionName, settings);
+        
         if (configuration is not null)
         {
-            if (string.IsNullOrEmpty(configurationSectionName))
-            {
-                configurationSectionName = "IpGeolocationSettings";
-            }
-            
             if (settings is not null)
             {
                 services.Configure<IpGeolocationSettings>(opt =>
