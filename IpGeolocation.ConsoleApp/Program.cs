@@ -10,14 +10,14 @@ var services = new ServiceCollection();
 
 ConfigureServices(services);
 
-string ipAddress = CheckCommandLineOptions(args);
+Options options = CheckCommandLineOptions(args);
 
 // create service provider
 var serviceProvider = services.BuildServiceProvider();
 
 // entry to run app
 // ReSharper disable once PossibleNullReferenceException
-await serviceProvider.GetService<App>()!.Run(ipAddress);
+await serviceProvider.GetService<App>()!.Run(options);
 
 serviceProvider.Dispose();
 
@@ -49,18 +49,18 @@ void ConfigureServices(IServiceCollection serviceCollection)
     services.AddTransient<App>();
 }
 
-static string CheckCommandLineOptions(string[] args)
+static Options CheckCommandLineOptions(string[] args)
 {
-    string ipAddr = null;
+    Options options = new Options();
     Parser.Default.ParseArguments<Options>(args)
         .WithParsed(opt =>
         {
-            ipAddr = opt.IpAddress;
+            options = opt;
         })
         .WithNotParsed(_ =>
         {
             // in case of parameter parsing errors or using help option close the application
             Environment.Exit(0);
         });
-    return ipAddr;
+    return options;
 }
