@@ -9,12 +9,13 @@
         <Authors>Jakub Kurłowicz</Authors>
         <Copyright>Copyright (c) Jakub Kurłowicz 2023</Copyright>
         <PackageProjectUrl>https://github.com/kubagdynia/IpGeolocation</PackageProjectUrl>
-        <Version>0.1.0</Version>
+        <Version>0.1.1</Version>
         <Description>IP Geolocation API based on ipapi.co</Description>
         <RepositoryUrl>https://github.com/kubagdynia/IpGeolocation</RepositoryUrl>
         <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
         <PackageIcon>IpGeolocation.png</PackageIcon>
         <PackageId>JK.IpGeolocation</PackageId>
+        <PackageReleaseNotes>Added missing country name to IIpGeolocationService.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
