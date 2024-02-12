@@ -1,0 +1,62 @@
+using CacheDrive.Services;
+using IpGeolocation.Extensions;
+using IpGeolocation.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace IpGeolocation.Tests;
+
+public class Tests
+{
+    private ServiceCollection _services;
+    private ServiceProvider _serviceProvider;
+    
+    [OneTimeSetUp]
+    public void Init()
+    {
+        _services = new ServiceCollection();
+
+        var testConfiguration = new Dictionary<string, string>
+        {
+            {"IpGeolocationSettings:BaseAddress", "https://ipapi.co/"},
+            {"CacheSettings:CacheEnabled", "true"},
+            {"CacheSettings:CacheExpirationType", "Minutes"},
+            {"CacheSettings:CacheExpiration", "60"},
+            {"CacheSettings:CacheType", "MemoryAndFile"},
+            {"CacheSettings:InitializeOnStartup", "true"},
+            {"CacheSettings:FlushOnExit", "true"}
+        };
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(testConfiguration).Build();
+        _services.UseIpGeolocation(configuration);
+        
+        _serviceProvider = _services.BuildServiceProvider();
+    }
+    
+    [OneTimeTearDown]
+    public void Cleanup()
+    {
+        _serviceProvider.Dispose();
+    }
+
+    [Test]
+    public async Task ArgumentException_Should_Be_Throw_When_IpAddress_Is_Empty()
+    {
+        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+
+        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        await cacheService.InitializeAsync();
+
+        Assert.ThrowsAsync<ArgumentException>(async() => await ipGeolocationService.GetIpGeolocationAsync(""));
+    }
+    
+    [Test]
+    public async Task ArgumentNullException_Should_Be_Throw_When_IpAddress_Is_Null()
+    {
+        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+
+        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        await cacheService.InitializeAsync();
+
+        Assert.ThrowsAsync<ArgumentNullException>(async() => await ipGeolocationService.GetIpGeolocationAsync(null));
+    }
+}

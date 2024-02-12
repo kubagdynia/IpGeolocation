@@ -27,6 +27,8 @@ public class IpApiService
     {
         try
         {
+            ArgumentException.ThrowIfNullOrEmpty(ipAddress);
+            
             using HttpResponseMessage response = await _httpClient.GetAsync($"{ipAddress}/json");
 
             if (response.IsSuccessStatusCode)
@@ -45,6 +47,11 @@ public class IpApiService
                     _logger.LogError(ex, "Invalid JSON.");
                     throw;
                 }
+            }
+            
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                throw new QuotaExceededException(response.ReasonPhrase);
             }
         }
         catch (TimeoutRejectedException ex)
@@ -107,6 +114,8 @@ public class IpApiService
     {
         try
         {
+            ArgumentException.ThrowIfNullOrEmpty(ipAddress);
+            
             using HttpResponseMessage response = await _httpClient.GetAsync($"{ipAddress}/{fieldType}");
 
             if (response.IsSuccessStatusCode)
