@@ -18,7 +18,8 @@ public class Tests
 
         var testConfiguration = new Dictionary<string, string>
         {
-            {"IpGeolocationSettings:BaseAddress", "https://ipapi.co/"},
+            {"IpGeolocationSettings:BaseAddress", "https://ipapi.co/"}, // default value, not need to be provided
+            {"IpGeolocationSettings:UserAgent", "ipapi.co/#c-sharp-v1.04"}, // default value, not need to be provided
             {"CacheSettings:CacheEnabled", "true"},
             {"CacheSettings:CacheExpirationType", "Minutes"},
             {"CacheSettings:CacheExpiration", "60"},

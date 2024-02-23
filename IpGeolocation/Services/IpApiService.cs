@@ -22,7 +22,7 @@ internal class IpApiService
         
         _httpClient.BaseAddress = new Uri(settings.Value.BaseAddress);
         
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "ipapi.co/#c-sharp-v1.04");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", settings.Value.UserAgent);
     }
 
     public async Task<IpGeolocationModel> GetFullDataAsync(string ipAddress)

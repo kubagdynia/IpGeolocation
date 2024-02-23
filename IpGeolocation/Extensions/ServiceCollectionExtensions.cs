@@ -41,7 +41,16 @@ public static class ServiceCollectionExtensions
             {
                 services.Configure<IpGeolocationSettings>(opt =>
                 {
-                    opt.BaseAddress = settings.BaseAddress;
+                    if (!string.IsNullOrEmpty(settings.BaseAddress))
+                    {
+                        opt.BaseAddress = settings.BaseAddress;
+                    }
+
+                    if (!string.IsNullOrEmpty(settings.UserAgent))
+                    {
+
+                        opt.UserAgent = settings.UserAgent;
+                    }
                 });
             }
             else
@@ -55,7 +64,16 @@ public static class ServiceCollectionExtensions
             {
                 services.Configure<IpGeolocationSettings>(opt =>
                 {
-                    opt.BaseAddress = settings.BaseAddress;
+                    if (!string.IsNullOrEmpty(settings.BaseAddress))
+                    {
+                        opt.BaseAddress = settings.BaseAddress;
+                    }
+
+                    if (!string.IsNullOrEmpty(settings.UserAgent))
+                    {
+
+                        opt.UserAgent = settings.UserAgent;
+                    }
                 });
             }
             else
