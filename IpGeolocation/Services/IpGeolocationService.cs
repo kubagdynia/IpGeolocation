@@ -3,7 +3,7 @@ using IpGeolocation.Models;
 
 namespace IpGeolocation.Services;
 
-public class IpGeolocationService : IIpGeolocationService
+internal class IpGeolocationService : IIpGeolocationService
 {
     private readonly IpApiService _ipApiService;
     private readonly ICacheService _cacheService;
@@ -36,14 +36,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Country);
         }
 
-        string cacheKey = $"country@{ipAddress}";
+        var cacheKey = $"country@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string country = await _ipApiService.GetCountryAsync(ipAddress);
+        var country = await _ipApiService.GetCountryAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, country);
 
@@ -57,14 +57,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.CountryName);
         }
 
-        string cacheKey = $"country-name@{ipAddress}";
+        var cacheKey = $"country-name@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string countryName = await _ipApiService.GetCountryNameAsync(ipAddress);
+        var countryName = await _ipApiService.GetCountryNameAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, countryName);
 
@@ -78,14 +78,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.CountryCode);
         }
 
-        string cacheKey = $"country-code@{ipAddress}";
+        var cacheKey = $"country-code@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string countryCode = await _ipApiService.GetCountryCodeAsync(ipAddress);
+        var countryCode = await _ipApiService.GetCountryCodeAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, countryCode);
 
@@ -99,14 +99,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.CountryCodeIso3);
         }
 
-        string cacheKey = $"country-code-iso3@{ipAddress}";
+        var cacheKey = $"country-code-iso3@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string countryCodeIso3 = await _ipApiService.GetCountryCodeIso3Async(ipAddress);
+        var countryCodeIso3 = await _ipApiService.GetCountryCodeIso3Async(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, countryCodeIso3);
 
@@ -120,14 +120,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.City);
         }
 
-        string cacheKey = $"city@{ipAddress}";
+        var cacheKey = $"city@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string city = await _ipApiService.GetCityAsync(ipAddress);
+        var city = await _ipApiService.GetCityAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, city);
 
@@ -141,14 +141,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.ContinentCode);
         }
 
-        string cacheKey = $"continent-code@{ipAddress}";
+        var cacheKey = $"continent-code@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string continentCode = await _ipApiService.GetContinentCodeAsync(ipAddress);
+        var continentCode = await _ipApiService.GetContinentCodeAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, continentCode);
 
@@ -162,14 +162,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Timezone);
         }
 
-        string cacheKey = $"timezone@{ipAddress}";
+        var cacheKey = $"timezone@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string timezone = await _ipApiService.GetTimezoneAsync(ipAddress);
+        var timezone = await _ipApiService.GetTimezoneAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, timezone);
 
@@ -183,14 +183,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Languages);
         }
 
-        string cacheKey = $"languages@{ipAddress}";
+        var cacheKey = $"languages@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string languages = await _ipApiService.GetLanguagesAsync(ipAddress);
+        var languages = await _ipApiService.GetLanguagesAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, languages);
 
@@ -204,14 +204,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Currency);
         }
 
-        string cacheKey = $"currency@{ipAddress}";
+        var cacheKey = $"currency@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string currency = await _ipApiService.GetCurrencyAsync(ipAddress);
+        var currency = await _ipApiService.GetCurrencyAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, currency);
 
@@ -225,14 +225,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.CurrencyName);
         }
 
-        string cacheKey = $"currency-name@{ipAddress}";
+        var cacheKey = $"currency-name@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string currencyName = await _ipApiService.GetCurrencyNameAsync(ipAddress);
+        var currencyName = await _ipApiService.GetCurrencyNameAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, currencyName);
 
@@ -246,14 +246,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Region);
         }
 
-        string cacheKey = $"region@{ipAddress}";
+        var cacheKey = $"region@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string region = await _ipApiService.GetRegionAsync(ipAddress);
+        var region = await _ipApiService.GetRegionAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, region);
 
@@ -267,14 +267,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.RegionCode);
         }
 
-        string cacheKey = $"region-code@{ipAddress}";
+        var cacheKey = $"region-code@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string regionCode = await _ipApiService.GetRegionCodeAsync(ipAddress);
+        var regionCode = await _ipApiService.GetRegionCodeAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, regionCode);
 
@@ -288,14 +288,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.UtcOffset);
         }
 
-        string cacheKey = $"utc-offset@{ipAddress}";
+        var cacheKey = $"utc-offset@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string utcOffset = await _ipApiService.GetUtcOffsetAsync(ipAddress);
+        var utcOffset = await _ipApiService.GetUtcOffsetAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, utcOffset);
 
@@ -309,14 +309,14 @@ public class IpGeolocationService : IIpGeolocationService
             return await Task.FromResult(cachedIpGeolocationModel.Org);
         }
 
-        string cacheKey = $"org@{ipAddress}";
+        var cacheKey = $"org@{ipAddress}";
         
         if (_cacheService.TryGetValue(cacheKey, out string cachedValue))
         {
             return await Task.FromResult(cachedValue);
         }
         
-        string org = await _ipApiService.GetOrgAsync(ipAddress);
+        var org = await _ipApiService.GetOrgAsync(ipAddress);
 
         await _cacheService.SetAsync(cacheKey, org);
 

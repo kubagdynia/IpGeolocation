@@ -11,6 +11,8 @@ namespace IpGeolocation.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    private const string IpGeolocationSettingsName = "IpGeolocationSettings";
+    
     public static void UseIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
     {
         UseIpGeolocation(services, null, null, settings);
@@ -23,12 +25,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddHttpClient<IpApiService>()
             .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
+            .AddPolicyHandler(GetTimeoutPolicy());
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
 
         if (string.IsNullOrEmpty(configurationSectionName))
         {
-            configurationSectionName = "IpGeolocationSettings";
+            configurationSectionName = IpGeolocationSettingsName;
         }
 
         services.RegisterCacheDrive(configuration, configurationSectionName: configurationSectionName, settings);
@@ -71,6 +73,5 @@ public static class ServiceCollectionExtensions
             .WaitAndRetryAsync(1, _ => TimeSpan.FromSeconds(seconds));
 
     static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy(int seconds = 5)
-        => Policy.TimeoutAsync<HttpResponseMessage>(seconds,
-            TimeoutStrategy.Optimistic, onTimeoutAsync: (_, _, _, _) => Task.CompletedTask);
+        => Policy.TimeoutAsync<HttpResponseMessage>(seconds);
 }

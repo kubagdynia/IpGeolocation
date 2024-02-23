@@ -8,7 +8,7 @@ using Polly.Timeout;
 
 namespace IpGeolocation.Services;
 
-public class IpApiService
+internal class IpApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<IpGeolocationService> _logger;
@@ -29,7 +29,7 @@ public class IpApiService
         {
             ArgumentException.ThrowIfNullOrEmpty(ipAddress);
             
-            using HttpResponseMessage response = await _httpClient.GetAsync($"{ipAddress}/json");
+            using var response = await _httpClient.GetAsync($"{ipAddress}/json");
 
             if (response.IsSuccessStatusCode)
             {
@@ -116,7 +116,7 @@ public class IpApiService
         {
             ArgumentException.ThrowIfNullOrEmpty(ipAddress);
             
-            using HttpResponseMessage response = await _httpClient.GetAsync($"{ipAddress}/{fieldType}");
+            using var response = await _httpClient.GetAsync($"{ipAddress}/{fieldType}");
 
             if (response.IsSuccessStatusCode)
             {
