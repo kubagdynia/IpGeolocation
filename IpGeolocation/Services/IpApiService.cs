@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using IpGeolocation.Configuration;
 using IpGeolocation.Exceptions;
 using IpGeolocation.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Polly.Timeout;
 
 namespace IpGeolocation.Services;
@@ -13,12 +15,12 @@ internal class IpApiService
     private readonly HttpClient _httpClient;
     private readonly ILogger<IpGeolocationService> _logger;
 
-    public IpApiService(HttpClient httpClient, ILogger<IpGeolocationService> logger)
+    public IpApiService(HttpClient httpClient, ILogger<IpGeolocationService> logger, IOptions<IpGeolocationSettings> settings)
     {
         _httpClient = httpClient;
         _logger = logger;
-
-        _httpClient.BaseAddress = new Uri("https://ipapi.co/");
+        
+        _httpClient.BaseAddress = new Uri(settings.Value.BaseAddress);
         
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "ipapi.co/#c-sharp-v1.04");
     }

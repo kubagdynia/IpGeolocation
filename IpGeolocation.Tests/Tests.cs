@@ -41,9 +41,9 @@ public class Tests
     [Test]
     public async Task ArgumentException_Should_Be_Throw_When_IpAddress_Is_Empty()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
         await cacheService.InitializeAsync();
 
         Assert.ThrowsAsync<ArgumentException>(async() => await ipGeolocationService.GetIpGeolocationAsync(""));
@@ -52,9 +52,9 @@ public class Tests
     [Test]
     public async Task ArgumentNullException_Should_Be_Throw_When_IpAddress_Is_Null()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
         await cacheService.InitializeAsync();
 
         Assert.ThrowsAsync<ArgumentNullException>(async() => await ipGeolocationService.GetIpGeolocationAsync(null));
