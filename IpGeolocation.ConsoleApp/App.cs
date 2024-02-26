@@ -1,4 +1,3 @@
-using IpGeolocation.Models;
 using IpGeolocation.Services;
 
 namespace IpGeolocation.ConsoleApp;
@@ -16,7 +15,7 @@ public class App
     {
         if (options.Full)
         {
-            IpGeolocationModel result = await _ipGeolocationService.GetIpGeolocationAsync(options.IpAddress);
+            var result = await _ipGeolocationService.GetIpGeolocationAsync(options.IpAddress);
             
             if (result is not null)
             {
@@ -40,29 +39,27 @@ public class App
         {
             if (options.City)
             {
-                string city = await _ipGeolocationService.GetCityAsync(options.IpAddress);
+                var city = await _ipGeolocationService.GetCityAsync(options.IpAddress);
                 Console.WriteLine($"City: {city}");
             }
             
             if (options.Region)
             {
-                string region = await _ipGeolocationService.GetRegionAsync(options.IpAddress);
+                var region = await _ipGeolocationService.GetRegionAsync(options.IpAddress);
                 Console.WriteLine($"Region: {region}");
             }
             
             if (options.Country)
             {
-                string country = await _ipGeolocationService.GetCountryAsync(options.IpAddress);
+                var country = await _ipGeolocationService.GetCountryAsync(options.IpAddress);
                 Console.WriteLine($"Country: {country}");
             }
             
             if (options.CountryName)
             {
-                string countryName = await _ipGeolocationService.GetCountryNameAsync(options.IpAddress);
+                var countryName = await _ipGeolocationService.GetCountryNameAsync(options.IpAddress);
                 Console.WriteLine($"Country Name: {countryName}");
             }
         }
-        
-        
     }
 }

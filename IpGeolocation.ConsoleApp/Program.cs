@@ -51,7 +51,7 @@ void ConfigureServices(IServiceCollection serviceCollection)
 
 static Options CheckCommandLineOptions(string[] args)
 {
-    Options options = new Options();
+    var options = new Options();
     Parser.Default.ParseArguments<Options>(args)
         .WithParsed(opt =>
         {

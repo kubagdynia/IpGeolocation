@@ -24,8 +24,9 @@ public static class ServiceCollectionExtensions
         IpGeolocationSettings settings = null)
     {
         services.AddHttpClient<IpApiService>()
-            .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetTimeoutPolicy());
+            .AddPolicyHandler(GetRetryPolicy(retryCount: 1, seconds: 5))
+            .AddPolicyHandler(GetTimeoutPolicy(timeoutSeconds: 5));
+        
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
 
         if (string.IsNullOrEmpty(configurationSectionName))
@@ -84,12 +85,12 @@ public static class ServiceCollectionExtensions
         }
     }
     
-    static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int seconds = 5)
+    static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int retryCount, int seconds)
         => HttpPolicyExtensions
             .HandleTransientHttpError()
             .Or<TimeoutRejectedException>()
-            .WaitAndRetryAsync(1, _ => TimeSpan.FromSeconds(seconds));
+            .WaitAndRetryAsync(retryCount, _ => TimeSpan.FromSeconds(seconds));
 
-    static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy(int seconds = 5)
-        => Policy.TimeoutAsync<HttpResponseMessage>(seconds);
+    static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy(int timeoutSeconds)
+        => Policy.TimeoutAsync<HttpResponseMessage>(timeoutSeconds);
 }

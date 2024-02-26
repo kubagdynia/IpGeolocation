@@ -16,13 +16,12 @@ internal class IpGeolocationService : IIpGeolocationService
 
     public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ipAddress)
     {
-        if (_cacheService.TryGetValue(ipAddress,
-                out IpGeolocationModel cachedIpGeolocationModel))
+        if (_cacheService.TryGetValue(ipAddress, out IpGeolocationModel cachedIpGeolocationModel))
         {
             return await Task.FromResult(cachedIpGeolocationModel);
         }
 
-        IpGeolocationModel ipGeolocationModel = await _ipApiService.GetFullDataAsync(ipAddress);
+        var ipGeolocationModel = await _ipApiService.GetFullDataAsync(ipAddress);
         
         await _cacheService.SetAsync(ipAddress, ipGeolocationModel);
         

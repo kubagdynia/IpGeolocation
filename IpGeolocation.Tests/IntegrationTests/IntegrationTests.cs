@@ -1,7 +1,6 @@
 using CacheDrive.Services;
 using FluentAssertions;
 using IpGeolocation.Extensions;
-using IpGeolocation.Models;
 using IpGeolocation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,18 +38,16 @@ public class IntegrationTests
     {
         _serviceProvider.Dispose();
     }
-    
-    
 
     [Test, Order(1)]
     public async Task Service_Should_Return_Correct_FullData_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
         await cacheService.InitializeAsync();
         
-        IpGeolocationModel ipResultData = await ipGeolocationService.GetIpGeolocationAsync("8.8.8.8");
+        var ipResultData = await ipGeolocationService.GetIpGeolocationAsync("8.8.8.8");
         ipResultData.Should().NotBeNull();
 
         ipResultData.City.Should().Be("Mountain View");
@@ -73,12 +70,12 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_Country_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
         
-        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
         await cacheService.InitializeAsync();
 
-        string result = await ipGeolocationService.GetCountryAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCountryAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("US");
         
@@ -88,12 +85,12 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_Country_Name_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
         
-        ICacheService cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
         await cacheService.InitializeAsync();
 
-        string result = await ipGeolocationService.GetCountryNameAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCountryNameAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("United States");
         
@@ -103,9 +100,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_City_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetCityAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCityAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("Mountain View");
     }
@@ -113,9 +110,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_Currency_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetCurrencyAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCurrencyAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("USD");
     }
@@ -123,9 +120,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_CurrencyName_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetCurrencyNameAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCurrencyNameAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("Dollar");
     }
@@ -133,9 +130,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_Region_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetRegionAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetRegionAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("California");
     }
@@ -143,9 +140,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_RegionCode_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetRegionCodeAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetRegionCodeAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("CA");
     }
@@ -153,9 +150,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_ContinentCode_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetContinentCodeAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetContinentCodeAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("NA");
     }
@@ -163,9 +160,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_CountryCode_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetCountryCodeAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetCountryCodeAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("US");
     }
@@ -173,9 +170,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_CountryCodeIso3_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetCountryCodeIso3Async("8.8.8.8");
+        var result = await ipGeolocationService.GetCountryCodeIso3Async("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("USA");
     }
@@ -184,9 +181,9 @@ public class IntegrationTests
     [Ignore("Ignore because UTC offset changes in time as part of the time change")]
     public async Task Service_Should_Return_Correct_UtcOffset_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetUtcOffsetAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetUtcOffsetAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("-0700");
     }
@@ -194,9 +191,9 @@ public class IntegrationTests
     [Test]
     public async Task Service_Should_Return_Correct_Org_For_Specific_Ip()
     {
-        IIpGeolocationService ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
+        var ipGeolocationService = _serviceProvider.GetRequiredService<IIpGeolocationService>();
 
-        string result = await ipGeolocationService.GetOrgAsync("8.8.8.8");
+        var result = await ipGeolocationService.GetOrgAsync("8.8.8.8");
         result.Should().NotBeNull();
         result.Should().Be("GOOGLE");
     }
