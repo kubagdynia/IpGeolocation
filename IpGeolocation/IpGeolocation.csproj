@@ -9,13 +9,13 @@
         <Authors>Jakub Kurłowicz</Authors>
         <Copyright>Copyright (c) Jakub Kurłowicz 2024</Copyright>
         <PackageProjectUrl>https://github.com/kubagdynia/IpGeolocation</PackageProjectUrl>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Description>IP Geolocation API based on ipapi.co</Description>
         <RepositoryUrl>https://github.com/kubagdynia/IpGeolocation</RepositoryUrl>
         <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
         <PackageIcon>IpGeolocation.png</PackageIcon>
         <PackageId>JK.IpGeolocation</PackageId>
-        <PackageReleaseNotes>Added protection against searching for empty ip addresses and fix throwing QuotaExceededException.</PackageReleaseNotes>
+        <PackageReleaseNotes>Added configuration changes.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
