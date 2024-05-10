@@ -25,7 +25,8 @@ public class IntegrationTests
             {"CacheSettings:CacheExpiration", "60"},
             {"CacheSettings:CacheType", "MemoryAndFile"},
             {"CacheSettings:InitializeOnStartup", "true"},
-            {"CacheSettings:FlushOnExit", "true"}
+            {"CacheSettings:FlushOnExit", "true"},
+            {"CacheSettings:HashKeySalt", "Secret123Secret"}
         };
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(testConfiguration).Build();
         _services.UseIpGeolocation(configuration);
