@@ -1,4 +1,6 @@
-﻿using IpGeolocation.Extensions;
+﻿using CacheDrive.Configuration;
+using IpGeolocation.Configuration;
+using IpGeolocation.Extensions;
 using IpGeolocation.Models;
 using IpGeolocation.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-services.UseIpGeolocation(settings: null);
+services.UseIpGeolocation(settings: new IpGeolocationSettings { CacheType = CacheType.MemoryAndFile });
 services.AddTransient<App>();
 
 var serviceProvider = services.BuildServiceProvider();
