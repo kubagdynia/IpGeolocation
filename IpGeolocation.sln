@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpGeolocation.ConsoleApp", "IpGeolocation.ConsoleApp\IpGeolocation.ConsoleApp.csproj", "{7EEC2631-CFE5-4138-88E9-DCA3A7818EB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpGeolocation", "IpGeolocation\IpGeolocation.csproj", "{82A4AF0F-67EA-438F-A1D5-51D09E528F9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpGeolocation.Tests", "IpGeolocation.Tests\IpGeolocation.Tests.csproj", "{C9500F7F-B270-4703-A513-21517EF592A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpGeolocation.ConsoleApp.WithoutConfig", "IpGeolocation.ConsoleApp.WithoutConfig\IpGeolocation.ConsoleApp.WithoutConfig.csproj", "{909E4796-CEC5-4CEC-B343-D25CFE148277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,9 @@ Global
 		{C9500F7F-B270-4703-A513-21517EF592A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9500F7F-B270-4703-A513-21517EF592A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9500F7F-B270-4703-A513-21517EF592A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909E4796-CEC5-4CEC-B343-D25CFE148277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909E4796-CEC5-4CEC-B343-D25CFE148277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909E4796-CEC5-4CEC-B343-D25CFE148277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909E4796-CEC5-4CEC-B343-D25CFE148277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
