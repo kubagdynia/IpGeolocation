@@ -1,3 +1,4 @@
+using CacheDrive.Configuration;
 using CacheDrive.Extensions;
 using IpGeolocation.Configuration;
 using IpGeolocation.Services;
@@ -16,6 +17,11 @@ public static class ServiceCollectionExtensions
     public static void UseIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
     {
         UseIpGeolocation(services, null, null, settings);
+    }
+    
+    public static void UseIpGeolocation(this IServiceCollection services, CacheType cacheType)
+    {
+        UseIpGeolocation(services, settings: new IpGeolocationSettings { CacheType = cacheType });
     }
     
     public static void UseIpGeolocation(this IServiceCollection services,
