@@ -27,6 +27,7 @@ void ConfigureServices(IServiceCollection serviceCollection)
     IConfiguration configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true)
         .AddEnvironmentVariables()
         .Build();
     

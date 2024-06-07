@@ -12,19 +12,17 @@ namespace IpGeolocation.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    private const string IpGeolocationSettingsName = "IpGeolocationSettings";
-    
-    public static void UseIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
+    public static IServiceCollection UseIpGeolocation(this IServiceCollection services, IpGeolocationSettings settings = null)
     {
-        UseIpGeolocation(services, null, null, settings);
+        return UseIpGeolocation(services, null, null, settings);
     }
     
-    public static void UseIpGeolocation(this IServiceCollection services, CacheType cacheType)
+    public static IServiceCollection UseIpGeolocation(this IServiceCollection services, CacheType cacheType)
     {
-        UseIpGeolocation(services, settings: new IpGeolocationSettings { CacheType = cacheType });
+        return UseIpGeolocation(services, settings: new IpGeolocationSettings { CacheType = cacheType });
     }
     
-    public static void UseIpGeolocation(this IServiceCollection services,
+    public static IServiceCollection UseIpGeolocation(this IServiceCollection services,
         IConfiguration configuration = null,
         string configurationSectionName = null,
         IpGeolocationSettings settings = null)
@@ -33,11 +31,34 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(GetRetryPolicy(retryCount: 1, seconds: 5))
             .AddPolicyHandler(GetTimeoutPolicy(timeoutSeconds: 5));
         
+        return RegisterAllItems(services, configuration, configurationSectionName, settings);
+    }
+
+    public static IServiceCollection UseIpGeolocation(this IServiceCollection services,
+        HttpMessageHandler httpMessageHandler,
+        IConfiguration configuration = null,
+        string configurationSectionName = null,
+        IpGeolocationSettings settings = null)
+    {
+        services.AddHttpClient<IpApiService>()
+            .AddPolicyHandler(GetRetryPolicy(retryCount: 1, seconds: 5))
+            .AddPolicyHandler(GetTimeoutPolicy(timeoutSeconds: 5))
+            .ConfigurePrimaryHttpMessageHandler(() => httpMessageHandler);
+
+        return RegisterAllItems(services, configuration, configurationSectionName, settings);
+    }
+
+    private static IServiceCollection RegisterAllItems(
+        IServiceCollection services,
+        IConfiguration configuration = null,
+        string configurationSectionName = null,
+        IpGeolocationSettings settings = null)
+    {
         services.AddTransient<IIpGeolocationService, IpGeolocationService>();
 
         if (string.IsNullOrEmpty(configurationSectionName))
         {
-            configurationSectionName = IpGeolocationSettingsName;
+            configurationSectionName = IpGeolocationSettings.AppConfigSectionName;
         }
 
         services.RegisterCacheDrive(configuration, configurationSectionName: configurationSectionName, settings);
@@ -89,8 +110,10 @@ public static class ServiceCollectionExtensions
                 services.Configure<IpGeolocationSettings>(_ => { });
             }
         }
+
+        return services;
     }
-    
+
     static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int retryCount, int seconds)
         => HttpPolicyExtensions
             .HandleTransientHttpError()

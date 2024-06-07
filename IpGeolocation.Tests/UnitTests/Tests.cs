@@ -4,8 +4,9 @@ using IpGeolocation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IpGeolocation.Tests;
+namespace IpGeolocation.Tests.UnitTests;
 
+[Category("UnitTests")]
 public class Tests
 {
     private ServiceCollection _services;

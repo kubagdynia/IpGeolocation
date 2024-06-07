@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IpGeolocation.Tests.IntegrationTests;
 
+[Category("IntegrationTests")]
 public class IntegrationTests
 {
     private ServiceCollection _services;
