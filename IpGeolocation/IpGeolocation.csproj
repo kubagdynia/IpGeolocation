@@ -15,7 +15,7 @@
         <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
         <PackageIcon>IpGeolocation.png</PackageIcon>
         <PackageId>JK.IpGeolocation</PackageId>
-        <PackageReleaseNotes>Version 0.3.2. Update libraries.</PackageReleaseNotes>
+        <PackageReleaseNotes>Version 0.3.3 Update libraries.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
