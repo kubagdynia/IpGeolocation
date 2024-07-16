@@ -9,7 +9,7 @@
         <Authors>Jakub Kurłowicz</Authors>
         <Copyright>Copyright (c) Jakub Kurłowicz 2023-2024</Copyright>
         <PackageProjectUrl>https://github.com/kubagdynia/IpGeolocation</PackageProjectUrl>
-        <Version>0.3.2</Version>
+        <Version>0.3.3</Version>
         <Description>IP Geolocation API based on ipapi.co</Description>
         <RepositoryUrl>https://github.com/kubagdynia/IpGeolocation</RepositoryUrl>
         <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
