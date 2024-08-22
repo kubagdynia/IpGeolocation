@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JK.IpGeolocation" Version="0.3.2" />
+    <PackageReference Include="JK.IpGeolocation" Version="0.3.3" />
   </ItemGroup>
 
 </Project>
