@@ -1,26 +1,24 @@
 ﻿using CacheDrive.Configuration;
 using IpGeolocation.Configuration;
 using IpGeolocation.Extensions;
-using IpGeolocation.Models;
 using IpGeolocation.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-
+// create services
 var services = new ServiceCollection();
 
-services.UseIpGeolocation(settings: new IpGeolocationSettings { CacheType = CacheType.MemoryAndFile });
-services.AddTransient<App>();
+// add and register
+services.UseIpGeolocation(settings: new IpGeolocationSettings
+    { CacheType = CacheType.MemoryAndFile, CacheExpirationType = CacheExpirationType.Minutes, CacheExpiration = 60});
 
+// build service provider
 var serviceProvider = services.BuildServiceProvider();
 
-var ipGeolocation = await serviceProvider.GetService<App>()!.GetIpGeolocationAsync("8.8.8.8");
+// get service and call method to get geolocation
+var ipGeolocation = await serviceProvider.GetRequiredService<IIpGeolocationService>().GetIpGeolocationAsync("8.8.8.8");
 
-Console.WriteLine(ipGeolocation.CountryName);
+// print geolocation data 
+Console.WriteLine(ipGeolocation.CountryName); // United States
 
+// dispose service provider to release resources
 serviceProvider.Dispose();
-
-internal class App(IIpGeolocationService ipGeolocationService)
-{
-    public async Task<IpGeolocationModel> GetIpGeolocationAsync(string ipAddress)
-        => await ipGeolocationService.GetIpGeolocationAsync(ipAddress);
-}
