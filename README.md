@@ -29,7 +29,7 @@ dotnet add package JK.IpGeolocation
 or just copy into the project file to reference the package:
 
 ```
-<PackageReference Include="JK.IpGeolocation" Version="0.3.4" />
+<PackageReference Include="JK.IpGeolocation" Version="0.4.0" />
 ```
 
 ### Usage
@@ -102,7 +102,8 @@ The library allows you to use configuration files to configure the library. You 
     "CacheType": "MemoryAndFile",
     "InitializeOnStartup": true,
     "FlushOnExit": true,
-    "HashKeySalt": "123s123"
+    "HashKeySalt": "123s123",
+    "ApiKey": ""
   }
 }
 ```
@@ -136,6 +137,20 @@ Console.WriteLine(ipGeolocation.CountryName); // United States
 // dispose service provider to release resources
 serviceProvider.Dispose();
 ```
+
+### How to use paid version of the ipapi.co API
+
+If you want to use the paid version of the ipapi.co API, you need to provide the API key in the configuration file or in the `IpGeolocationSettings` class.
+
+```json
+{
+  "IpGeolocationSettings": {
+    "ApiKey": "your_api_key"
+  }
+}
+```
+
+If you leave the `ApiKey` property empty or do not provide it, the library will use the free version of the ipapi.co API.
 
 ### Code Examples
 

@@ -14,6 +14,10 @@ internal class IpApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<IpGeolocationService> _logger;
+    private readonly string _apiKey;
+    
+    private static readonly HttpStatusCode[] FailedResponsesStatusCodes =
+        { HttpStatusCode.TooManyRequests, HttpStatusCode.Forbidden };
 
     public IpApiService(HttpClient httpClient, ILogger<IpGeolocationService> logger, IOptions<IpGeolocationSettings> settings)
     {
@@ -21,6 +25,9 @@ internal class IpApiService
         _logger = logger;
         
         _httpClient.BaseAddress = new Uri(settings.Value.BaseAddress);
+        
+        // Prepare the API key for the query string
+        _apiKey = string.IsNullOrEmpty(settings.Value.ApiKey) ? string.Empty : $"?key={settings.Value.ApiKey}";
         
         _httpClient.DefaultRequestHeaders.Add("User-Agent", settings.Value.UserAgent);
     }
@@ -31,7 +38,7 @@ internal class IpApiService
         {
             ArgumentException.ThrowIfNullOrEmpty(ipAddress);
             
-            using var response = await _httpClient.GetAsync($"{ipAddress}/json");
+            using var response = await _httpClient.GetAsync($"{ipAddress}/json{_apiKey}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -51,10 +58,7 @@ internal class IpApiService
                 }
             }
             
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                throw new QuotaExceededException(response.ReasonPhrase);
-            }
+            await HandleFailedResponsesAsync(response);
         }
         catch (TimeoutRejectedException ex)
         {
@@ -118,7 +122,7 @@ internal class IpApiService
         {
             ArgumentException.ThrowIfNullOrEmpty(ipAddress);
             
-            using var response = await _httpClient.GetAsync($"{ipAddress}/{fieldType}");
+            using var response = await _httpClient.GetAsync($"{ipAddress}/{fieldType}{_apiKey}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -133,10 +137,7 @@ internal class IpApiService
                 }
             }
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                throw new QuotaExceededException(response.ReasonPhrase);
-            }
+            await HandleFailedResponsesAsync(response);
         }
         catch (TimeoutRejectedException ex)
         {
@@ -151,4 +152,32 @@ internal class IpApiService
 
         return await Task.FromResult<string>(null);
     }
+    private async Task HandleFailedResponsesAsync(HttpResponseMessage response)
+    {
+        if (FailedResponsesStatusCodes.Contains(response.StatusCode))
+        {
+            try
+            {
+                var apiError = await response.Content.ReadFromJsonAsync<ApiError>();
+
+                if (apiError.Error)
+                {
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.TooManyRequests:
+                            throw new QuotaExceededException(response.ReasonPhrase);
+                        case HttpStatusCode.Forbidden when apiError.Reason != null && apiError.Reason.Equals("invalid key", StringComparison.OrdinalIgnoreCase):
+                            throw new InvalidKeyException(apiError.Message);
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred.");
+            }
+        }
+    }
 }
+
+internal record ApiError(bool Error, string Reason, string Message);
