@@ -76,8 +76,12 @@ public static class ServiceCollectionExtensions
 
                     if (!string.IsNullOrEmpty(settings.UserAgent))
                     {
-
                         opt.UserAgent = settings.UserAgent;
+                    }
+                    
+                    if (!string.IsNullOrEmpty(settings.ApiKey))
+                    {
+                        opt.ApiKey = settings.ApiKey;
                     }
                 });
             }
@@ -101,6 +105,11 @@ public static class ServiceCollectionExtensions
                     {
 
                         opt.UserAgent = settings.UserAgent;
+                    }
+                    
+                    if (!string.IsNullOrEmpty(settings.ApiKey))
+                    {
+                        opt.ApiKey = settings.ApiKey;
                     }
                 });
             }
