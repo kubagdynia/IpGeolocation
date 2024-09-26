@@ -27,7 +27,9 @@ internal class IpApiService
         _httpClient.BaseAddress = new Uri(settings.Value.BaseAddress);
         
         // Prepare the API key for the query string
-        _apiKey = string.IsNullOrEmpty(settings.Value.ApiKey) ? string.Empty : $"?key={settings.Value.ApiKey}";
+        _apiKey = string.IsNullOrEmpty(settings.Value.ApiKey)
+            ? string.Empty
+            : $"?{GlobalConfig.ApiKeyPropertyName}={settings.Value.ApiKey}";
         
         _httpClient.DefaultRequestHeaders.Add("User-Agent", settings.Value.UserAgent);
     }
@@ -158,9 +160,9 @@ internal class IpApiService
         {
             try
             {
-                var apiError = await response.Content.ReadFromJsonAsync<ApiError>();
+                ApiError apiError = await response.Content.ReadFromJsonAsync<ApiError>();
 
-                if (apiError.Error)
+                if (apiError is { Error: true })
                 {
                     switch (response.StatusCode)
                     {
@@ -170,11 +172,10 @@ internal class IpApiService
                             throw new InvalidKeyException(apiError.Message);
                     }
                 }
-                
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
-                _logger.LogError(ex, "An error occurred.");
+                _logger.LogError(ex, "Invalid JSON.");
             }
         }
     }
