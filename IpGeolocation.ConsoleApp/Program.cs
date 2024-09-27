@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using IpGeolocation.ConsoleApp;
+using IpGeolocation.ConsoleApp.Extensions;
 using IpGeolocation.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,8 @@ void ConfigureServices(IServiceCollection serviceCollection)
     Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(configuration)
         .Enrich.FromLogContext()
+        .Enrich.With(new UriQueryParametersMaskingEnricher("******", IpGeolocation.GlobalConfig.ApiKeyPropertyName))
+        //.Enrich.With(new UriQueryParametersMaskingEnricher(configuration))
         .CreateLogger();
     
     // configure logging
