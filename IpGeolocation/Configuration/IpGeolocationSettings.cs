@@ -20,7 +20,8 @@ public class IpGeolocationSettings : CacheSettings
     public string UserAgent { get; set; } = "ipapi.co/#c-sharp-v1.04";
     
     /// <summary>
-    /// The API key to be used in the request header. Optional. Used for paid plans.
+    /// API key for the paid version of the ipapi.co API.
+    /// Default value is an empty string, which means that the free version of the ipapi.co API will be used.
     /// </summary>
     public string ApiKey { get; set; }
 }

@@ -29,7 +29,7 @@ dotnet add package JK.IpGeolocation
 or just copy into the project file to reference the package:
 
 ```
-<PackageReference Include="JK.IpGeolocation" Version="0.4.0" />
+<PackageReference Include="JK.IpGeolocation" Version="0.4.1" />
 ```
 
 ### Usage
@@ -107,6 +107,17 @@ The library allows you to use configuration files to configure the library. You 
   }
 }
 ```
+
+- BaseAddress - Base address of the ipapi.co API
+- CacheEnabled - Determines whether cache is enabled. Default value is true.
+- CacheFolderName - Cache folder name. Default value is "cache".
+- CacheExpirationType - In what units do we specify cache expiration. Default value is Minutes.
+- CacheExpiration - After what time the objects in the cache will expire. Based on CacheExpirationType. Default value is 60.
+- CacheType - Method of storing the cache. Memory - only in memory. MemoryAndFile - In memory while the application is running and in files after the application is closed. Default value is Memory.
+- InitializeOnStartup - Determines whether the cache should be initialized at startup. Default value is true.
+- FlushOnExit - Determines whether the cache should be flushed to a files when the application is closed. Default value is true.
+- HashKeySalt - Salt, which will be added to the key hash. Default value is an empty string, which means that adding salt is disabled.
+- ApiKey - API key for the paid version of the ipapi.co API. Default value is an empty string, which means that the free version of the ipapi.co API will be used.
 
 Then you can use the `UseIpGeolocation` method to add and register the library with the configuration.
 
