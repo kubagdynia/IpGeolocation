@@ -10,7 +10,7 @@
         <Copyright>Copyright (c) Jakub Kurłowicz 2023-2024</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/kubagdynia/IpGeolocation</PackageProjectUrl>
-        <Version>0.4.1</Version>
+        <Version>0.4.2</Version>
         <Description>IP Geolocation API based on ipapi.co</Description>
         <RepositoryUrl>https://github.com/kubagdynia/IpGeolocation</RepositoryUrl>
         <PackageTags>geolocation ipgeolocation ipapi</PackageTags>
@@ -26,15 +26,15 @@
 
     <ItemGroup>
         <PackageReference Include="CacheDrive" Version="0.2.4" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.8" />
-        <PackageReference Include="Polly" Version="8.4.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.10" />
+        <PackageReference Include="Polly" Version="8.4.2" />
         <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
     </ItemGroup>
 

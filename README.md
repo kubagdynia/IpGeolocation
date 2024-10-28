@@ -29,7 +29,7 @@ dotnet add package JK.IpGeolocation
 or just copy into the project file to reference the package:
 
 ```
-<PackageReference Include="JK.IpGeolocation" Version="0.4.1" />
+<PackageReference Include="JK.IpGeolocation" Version="0.4.2" />
 ```
 
 ### Usage
