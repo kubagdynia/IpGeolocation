@@ -160,7 +160,7 @@ internal class IpApiService
         {
             try
             {
-                ApiError apiError = await response.Content.ReadFromJsonAsync<ApiError>();
+                var apiError = await response.Content.ReadFromJsonAsync<ApiError>();
 
                 if (apiError is { Error: true })
                 {
